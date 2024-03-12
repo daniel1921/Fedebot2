@@ -1,0 +1,16 @@
+{
+  "name": "fedebot2",
+  "version": "1.0.0",
+  "description": "Bot para registro de miembros del gremio La Federacion Y (Albion Online)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Daniel Mafla Bonet",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5"
+  }
+}
