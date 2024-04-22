@@ -17,6 +17,19 @@ const commands = [
       },
     ],
   },
+  {
+    name: "wobo",
+    description:
+      "¡Este comando te hace un alce mas fuerte!",
+    options: [
+      {
+        type: 3,
+        name: "contentwb",
+        description: "¿cual oficial es el mas gay?",
+        required: true,
+      },
+    ],
+  },
 ];
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN_DISCORD);
@@ -95,6 +108,34 @@ const cnn = async () => {
 
       // const resp = await interaction.reply("prueba finalizada!");
       //console.log(resp);
+    }
+    if(interaction.commandName === "wobo") {
+      var nickname = '';
+      try {
+      pwd =  await interaction.options.getString("contentwb");
+      } catch (error) {
+          await interaction.reply(`Ha ocurrido un error: ${error} `);
+      }
+    
+    // console.log("entro al comando");
+    try {
+      if(pwd==='ymiwobos'){
+        await interaction.member.roles.add("1231978864968863875");
+        await interaction.reply(
+          `El usuario es un :deer: `
+        );
+      } else {
+        await interaction.reply(
+          `Es correcto el oficial ${pwd} efectivamente es gay! :man_tipping_hand:   `
+        );
+      }
+      
+    } catch (error) {
+      await interaction.reply(`Ha ocurrido un error: ${error}`);
+    }
+
+    // const resp = await interaction.reply("prueba finalizada!");
+    //console.log(resp);
     }
   });
 };
