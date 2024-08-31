@@ -65,7 +65,8 @@ const cnn = async () => {
       // console.log("entro al comando");
       try {
         const apiAlbionResp = await axios.get(
-          `https://gameinfo.albiononline.com/api/gameinfo/search?q=${nickname}`
+          `https://gameinfo.albiononline.com/api/gameinfo/search?q=${nickname}`,
+          { timeout: 100000 }
         );
 
         if (apiAlbionResp.status === 200) {
