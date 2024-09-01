@@ -115,20 +115,21 @@ const cnn = async () => {
       try {
       pwd =  await interaction.options.getString("contentwb");
       } catch (error) {
-          await interaction.reply(`Ha ocurrido un error: ${error} `);
+        await interaction.reply({ content: `Ha ocurrido un error: ${error}`, ephemeral: true });
       }
     
     // console.log("entro al comando");
     try {
       if(pwd==='ymiwobos'){
         await interaction.member.roles.add("1231978864968863875");
-        await interaction.reply(
-          `El usuario es un :deer: `
-        );
+        await interaction.reply({
+          content: `El usuario es un :deer:`,
+          ephemeral: true // Solo el usuario que ejecutó el comando verá este mensaje
+        });
       } else {
-        await interaction.reply(
-          `Es correcto el oficial ${pwd} efectivamente es gay! :man_tipping_hand:   `
-        );
+        await interaction.reply({
+          content: `Es correcto este usuario ${pwd} efectivamente es gay! :man_tipping_hand:`// Solo el usuario que ejecutó el comando verá este mensaje
+        });
       }
       
     } catch (error) {
