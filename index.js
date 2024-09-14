@@ -120,7 +120,7 @@ const cnn = async () => {
     
     // console.log("entro al comando");
     try {
-      if(pwd==='ymiwobos'){
+      if(pwd==='ismaestopo'){
         await interaction.member.roles.add("1231978864968863875");
         await interaction.reply({
           content: `El usuario es un :deer:`,
