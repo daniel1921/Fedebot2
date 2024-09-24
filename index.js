@@ -83,9 +83,33 @@ const cnn = async () => {
                 await interaction.member.roles.add("955948751338471455");
                 try {
                   await interaction.member.setNickname(nickname);
-                  await interaction.reply(
+                  const respuesta = await interaction.reply(
                     `El usuario ${nickname}, se ha registrado en el servidor, Bienvenido! A partir de ahora tienes el rol de miembro :green_heart:  `
                   );
+
+                  
+
+                  if(respuesta.interaction.user.id > 0) {
+                    try {
+                      const createPlayerInApp = await axios.post(
+                        `http://localhost:8080/api/jugadores`,[
+                          {
+                              "nickname": nickname,
+                              "idCargo": 3,
+                              "idRol": 5,
+                              "idUserDiscord": respuesta.interaction.user.id
+                          }
+                      ],
+                        { timeout: 100000 }
+                      );
+                      console.log(createPlayerInApp)
+                    } catch (error) {
+                      console.log(error)
+                    }
+                
+                    
+                  }
+                  
                 } catch (error) {
                   await interaction.reply(`Ha ocurrido un error: ${error} `);
                 }
