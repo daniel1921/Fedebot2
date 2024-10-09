@@ -19,8 +19,7 @@ const commands = [
   },
   {
     name: "wobo",
-    description:
-      "¡Este comando te hace un alce mas fuerte!",
+    description: "¡Este comando te hace un alce mas fuerte!",
     options: [
       {
         type: 3,
@@ -52,23 +51,25 @@ const cnn = async () => {
   });
 
   client.on("interactionCreate", async (interaction) => {
-   // if (!interaction.isChatInputCommand()) return;
-   console.log("entro al comando");
-    if(interaction.commandName === "unirse") {
-        var nickname = '';
-        try {
-        nickname =  await interaction.options.getString("nickname");
-        } catch (error) {
-            await interaction.reply(`Ha ocurrido un error: ${error} `);
-        }
-      
-      // console.log("entro al comando");
+    // if (!interaction.isChatInputCommand()) return;
+    console.log("entro aqui :D");
+    if (interaction.commandName === "unirse") {
+      console.log("entro al comando");
+      var nickname = "";
+      try {
+        nickname = await interaction.options.getString("nickname");
+        console.log("nickname");
+      } catch (error) {
+        await interaction.reply(`Ha ocurrido un error: ${error} `);
+      }
+
+      console.log("entro al comando parte2");
       try {
         const apiAlbionResp = await axios.get(
           `https://gameinfo.albiononline.com/api/gameinfo/search?q=${nickname}`,
           { timeout: 100000 }
         );
-
+        console.log("entro al comando parte 3");
         if (apiAlbionResp.status === 200) {
           if (apiAlbionResp.data.players.length > 0) {
             // Pertenece a la federacion Y?
@@ -79,43 +80,64 @@ const cnn = async () => {
             );
 
             if (esMiembro) {
-              try {
-                await interaction.member.roles.add("955948751338471455");
+             
+               
                 try {
-                  await interaction.member.setNickname(nickname);
-                  const respuesta = await interaction.reply(
-                    `El usuario ${nickname}, se ha registrado en el servidor, Bienvenido! A partir de ahora tienes el rol de miembro :green_heart:  `
-                  );
-
-                  
-
-                  if(respuesta.interaction.user.id > 0) {
+                  const userId = interaction.user.id;
+                  // const respuesta = await interaction.reply(
+                  //   ` Procesando registro de usuario... `
+                  // );
+                  if (userId) {
+                    // Enviar una respuesta provisional al usuario
+                    await interaction.reply(
+                      `Procesando registro de usuario...`
+                    );
                     try {
                       const createPlayerInApp = await axios.post(
-                        `http://localhost:8080/api/jugadores`,[
+                        //  CAMBIAR LA url POR PRODUCCIÓN
+                        `http://localhost:8080/api/jugadores`,
+                        [
                           {
-                              "nickname": nickname,
-                              "idCargo": 3,
-                              "idRol": 5,
-                              "idUserDiscord": respuesta.interaction.user.id
-                          }
-                      ],
+                            nickname: nickname,
+                            idCargo: 3,
+                            idRol: 5,
+                            idUserDiscord: userId,
+                          },
+                        ],
                         { timeout: 100000 }
                       );
-                      console.log(createPlayerInApp)
-                    } catch (error) {
-                      console.log(error)
-                    }
-                
+                      if (createPlayerInApp.data.ok) {
+
+                        await interaction.member.setNickname(nickname);
+                        await interaction.member.roles.add("955948751338471455");
+
+                        await interaction.followUp(
+                          `El usuario ${nickname}, se ha registrado en el servidor, Bienvenido! A partir de ahora tienes el rol de miembro :green_heart:  `
+                        );
+                      } else {
+                        await interaction.followUp(
+                          `El usuario ${nickname}, ya se encuentra registrado, no es necesario que continues utilizando el comando :moose:  `
+                        );
+                      }
                     
+                    } catch (error) {
+                      if (error.response && error.response.data.ok === false) {
+                        console.log("Usuario ya registrado");
+                        return interaction.followUp(
+                          `El usuario ${nickname}, ya se encuentra registrado, no es necesario que continues utilizando el comando :moose:`
+                        );
+                      } else {
+                        console.error("Error al registrar usuario: ", error);
+                        await interaction.followUp(
+                          `Hubo un problema al procesar tu solicitud. Por favor, intenta más tarde.`
+                        );
+                      }
+                    }
                   }
-                  
                 } catch (error) {
                   await interaction.reply(`Ha ocurrido un error: ${error} `);
                 }
-              } catch (error) {
-                await interaction.reply(`Ha ocurrido un error: ${error} `);
-              }
+              
             } else {
               await interaction.reply(
                 ` Hubo un problema al momento de registrarte con el Nickname de ${nickname}, probablemente no estes en el gremio, no esperes para ser parte nuestra comunidad  :beers: `
@@ -126,6 +148,8 @@ const cnn = async () => {
               `No se encontró al jugador ${nickname} en la base de datos de albion online, porfavor ingresa el mismo nombre que tienes en el juego`
             );
           }
+        } else {
+          console.log("entro al comando parte 4");
         }
       } catch (error) {
         await interaction.reply(`Ha ocurrido un error: ${error}`);
@@ -134,34 +158,36 @@ const cnn = async () => {
       // const resp = await interaction.reply("prueba finalizada!");
       //console.log(resp);
     }
-    if(interaction.commandName === "wobo") {
-      var nickname = '';
+    if (interaction.commandName === "wobo") {
+      var nickname = "";
       try {
-      pwd =  await interaction.options.getString("contentwb");
+        pwd = await interaction.options.getString("contentwb");
       } catch (error) {
-        await interaction.reply({ content: `Ha ocurrido un error: ${error}`, ephemeral: true });
-      }
-    
-    // console.log("entro al comando");
-    try {
-      if(pwd==='ismaestopo'){
-        await interaction.member.roles.add("1231978864968863875");
         await interaction.reply({
-          content: `El usuario es un :deer:`,
-          ephemeral: true // Solo el usuario que ejecutó el comando verá este mensaje
-        });
-      } else {
-        await interaction.reply({
-          content: `Es correcto este usuario ${pwd} efectivamente es gay! :man_tipping_hand:`// Solo el usuario que ejecutó el comando verá este mensaje
+          content: `Ha ocurrido un error: ${error}`,
+          ephemeral: true,
         });
       }
-      
-    } catch (error) {
-      await interaction.reply(`Ha ocurrido un error: ${error}`);
-    }
 
-    // const resp = await interaction.reply("prueba finalizada!");
-    //console.log(resp);
+      // console.log("entro al comando");
+      try {
+        if (pwd === "ismaestopo") {
+          await interaction.member.roles.add("1231978864968863875");
+          await interaction.reply({
+            content: `El usuario es un :deer:`,
+            ephemeral: true, // Solo el usuario que ejecutó el comando verá este mensaje
+          });
+        } else {
+          await interaction.reply({
+            content: `Es correcto este usuario ${pwd} efectivamente es gay! :man_tipping_hand:`, // Solo el usuario que ejecutó el comando verá este mensaje
+          });
+        }
+      } catch (error) {
+        await interaction.reply(`Ha ocurrido un error: ${error}`);
+      }
+
+      // const resp = await interaction.reply("prueba finalizada!");
+      //console.log(resp);
     }
   });
 };
