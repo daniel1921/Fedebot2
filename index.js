@@ -95,7 +95,7 @@ const cnn = async () => {
                     try {
                       const createPlayerInApp = await axios.post(
                         //  CAMBIAR LA url POR PRODUCCIÓN
-                        `http://localhost:8080/api/jugadores`,
+                        `https://www.lafederaciony.online/api/jugadores`,
                         [
                           {
                             nickname: nickname,
