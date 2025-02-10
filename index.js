@@ -16,19 +16,19 @@ const commands = [
         required: true,
       },
     ],
-  },
-  {
-    name: "wobo",
-    description: "¡Este comando te hace un alce mas fuerte!",
-    options: [
-      {
-        type: 3,
-        name: "contentwb",
-        description: "¿cual oficial es el mas gay?",
-        required: true,
-      },
-    ],
-  },
+  // },
+  // {
+  //   name: "wobo",
+  //   description: "¡Este comando te hace un alce mas fuerte!",
+  //   options: [
+  //     {
+  //       type: 3,
+  //       name: "contentwb",
+  //       description: "¿cual oficial es el mas gay?",
+  //       required: true,
+  //     },
+  //   ],
+   },
 ];
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN_DISCORD);
@@ -63,7 +63,7 @@ const cnn = async () => {
         await interaction.reply(`Ha ocurrido un error: ${error} `);
       }
 
-      console.log("entro al comando parte2");
+      console.log("Validado el nickname listo para llamar a la api del albion");
       try {
         const apiAlbionResp = await axios.get(
           `https://gameinfo.albiononline.com/api/gameinfo/search?q=${nickname}`,
@@ -79,8 +79,7 @@ const cnn = async () => {
                 miembro.Name.toLowerCase() === nickname.toLowerCase()
             );
 
-            if (esMiembro) {
-             
+            if (esMiembro) {        
                
                 try {
                   const userId = interaction.user.id;
@@ -95,10 +94,11 @@ const cnn = async () => {
                     try {
                       const createPlayerInApp = await axios.post(
                         //  CAMBIAR LA url POR PRODUCCIÓN
+                        
                         `https://www.lafederaciony.online/api/jugadores`,
                         [
                           {
-                            nickname: nickname,
+                            nickname: nickname.toLowerCase(),
                             idCargo: 3,
                             idRol: 5,
                             idUserDiscord: userId,
@@ -106,26 +106,34 @@ const cnn = async () => {
                         ],
                         { timeout: 100000 }
                       );
+                      console.log('respuesta de la api de la fede: ', createPlayerInApp)
                       if (createPlayerInApp.data.ok) {
 
-                        await interaction.member.setNickname(nickname);
+                        await interaction.member.setNickname(nickname.toLowerCase());
                         await interaction.member.roles.add("955948751338471455");
 
                         await interaction.followUp(
-                          `El usuario ${nickname}, se ha registrado en el servidor, Bienvenido! A partir de ahora tienes el rol de miembro :green_heart:  `
+                          `El usuario ${nickname}, se ha registrado en el servidor, Bienvenido! A partir de ahora tienes el rol de miembro :green_heart:  `                          
                         );
                       } else {
                         await interaction.followUp(
-                          `El usuario ${nickname}, ya se encuentra registrado, no es necesario que continues utilizando el comando :moose:  `
+                          `¡Bienvenido de vuelta a la federación! :green_heart:  `
                         );
+                        await interaction.member.setNickname(nickname.toLowerCase());
+                        await interaction.member.roles.add("955948751338471455");
                       }
                     
                     } catch (error) {
                       if (error.response && error.response.data.ok === false) {
                         console.log("Usuario ya registrado");
-                        return interaction.followUp(
-                          `El usuario ${nickname}, ya se encuentra registrado, no es necesario que continues utilizando el comando :moose:`
+                       
+                        await interaction.member.setNickname(nickname.toLowerCase());
+                        await interaction.member.roles.add("955948751338471455");
+                        await interaction.followUp(
+                          `¡Bienvenido de vuelta a la federación! :green_heart:  `
                         );
+                     
+                        
                       } else {
                         console.error("Error al registrar usuario: ", error);
                         await interaction.followUp(
@@ -158,37 +166,37 @@ const cnn = async () => {
       // const resp = await interaction.reply("prueba finalizada!");
       //console.log(resp);
     }
-    if (interaction.commandName === "wobo") {
-      var nickname = "";
-      try {
-        pwd = await interaction.options.getString("contentwb");
-      } catch (error) {
-        await interaction.reply({
-          content: `Ha ocurrido un error: ${error}`,
-          ephemeral: true,
-        });
-      }
+    // if (interaction.commandName === "wobo") {
+    //   var nickname = "";
+    //   try {
+    //     pwd = await interaction.options.getString("contentwb");
+    //   } catch (error) {
+    //     await interaction.reply({
+    //       content: `Ha ocurrido un error: ${error}`,
+    //       ephemeral: true,
+    //     });
+    //   }
 
-      // console.log("entro al comando");
-      try {
-        if (pwd === "ismaestopo") {
-          await interaction.member.roles.add("1231978864968863875");
-          await interaction.reply({
-            content: `El usuario es un :deer:`,
-            ephemeral: true, // Solo el usuario que ejecutó el comando verá este mensaje
-          });
-        } else {
-          await interaction.reply({
-            content: `Es correcto este usuario ${pwd} efectivamente es gay! :man_tipping_hand:`, // Solo el usuario que ejecutó el comando verá este mensaje
-          });
-        }
-      } catch (error) {
-        await interaction.reply(`Ha ocurrido un error: ${error}`);
-      }
+    //   // console.log("entro al comando");
+    //   try {
+    //     if (pwd === "ismaestopo") {
+    //       await interaction.member.roles.add("1231978864968863875");
+    //       await interaction.reply({
+    //         content: `El usuario es un :deer:`,
+    //         ephemeral: true, // Solo el usuario que ejecutó el comando verá este mensaje
+    //       });
+    //     } else {
+    //       await interaction.reply({
+    //         content: `Es correcto este usuario ${pwd} efectivamente es gay! :man_tipping_hand:`, // Solo el usuario que ejecutó el comando verá este mensaje
+    //       });
+    //     }
+    //   } catch (error) {
+    //     await interaction.reply(`Ha ocurrido un error: ${error}`);
+    //   }
 
-      // const resp = await interaction.reply("prueba finalizada!");
-      //console.log(resp);
-    }
+    //   // const resp = await interaction.reply("prueba finalizada!");
+    //   //console.log(resp);
+    // }
   });
 };
 
