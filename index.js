@@ -16,19 +16,20 @@ const commands = [
         required: true,
       },
     ],
-  // },
-  // {
-  //   name: "wobo",
-  //   description: "¡Este comando te hace un alce mas fuerte!",
-  //   options: [
-  //     {
-  //       type: 3,
-  //       name: "contentwb",
-  //       description: "¿cual oficial es el mas gay?",
-  //       required: true,
-  //     },
-  //   ],
-   },
+  },
+  {
+    name: "join",
+    description:
+      "Comando para hablitar el rol de miembro, debe usar su nick de albion",
+    options: [
+      {
+        type: 3,
+        name: "nickname",
+        description: "Ingresar el Nick de albion",
+        required: true,
+      },
+    ],
+  },   
 ];
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN_DISCORD);
@@ -163,40 +164,91 @@ const cnn = async () => {
         await interaction.reply(`Ha ocurrido un error: ${error}`);
       }
 
-      // const resp = await interaction.reply("prueba finalizada!");
-      //console.log(resp);
+    } 
+
+    if (interaction.commandName === "join") {
+      console.log("entro al comando");
+      var nickname = "";
+      try {
+        nickname = await interaction.options.getString("nickname");
+        console.log("nickname");
+      } catch (error) {
+        await interaction.reply(`Ha ocurrido un error: ${error} `);
+      }
+
+      console.log("Validado el nickname listo para llamar a la api del albion");
+      try {
+        const apiAlbionResp = await axios.get(
+          `https://gameinfo.albiononline.com/api/gameinfo/search?q=${nickname}`,
+          { timeout: 100000 }
+        );
+        console.log("entro al comando parte 3");
+        if (apiAlbionResp.status === 200) {
+          if (apiAlbionResp.data.players.length > 0) {
+            // Pertenece a la federacion Y?
+            const esMiembro = apiAlbionResp.data.players.some(
+              (miembro) =>
+                (miembro.GuildName === "La Federacion Y" || miembro.GuildName === "CHAMBERS OF TRUTH") &&
+                miembro.Name.toLowerCase() === nickname.toLowerCase()
+            );
+
+            if (esMiembro) {        
+               
+                try {
+                  const userId = interaction.user.id;               
+                  if (userId) {
+                    // Enviar una respuesta provisional al usuario
+                    await interaction.reply(
+                      `Procesando registro de usuario...`
+                    );
+                    try {
+                  
+                      console.log('respuesta de la api de la fede: ', createPlayerInApp)
+                      
+
+                        await interaction.member.setNickname(nickname.toLowerCase());
+                        await interaction.member.roles.add("1360773908663500949");
+                        if(miembro.GuildName === "CHAMBERS OF TRUTH") {
+                          await interaction.member.roles.add("1361037774257651906");
+                        }
+
+                        if(miembro.GuildName === "La Federacion Y") {
+                          await interaction.member.roles.add("1361037610658828609");
+                        }
+                       
+
+                        await interaction.followUp(
+                          `El usuario ${nickname}, se ha registrado en el servidor, Bienvenido! A partir de ahora tienes el rol de miembro :green_heart:  `                          
+                        );
+                      
+                    
+                    } catch (error) {
+                      
+                    }
+                  }
+                } catch (error) {
+                  await interaction.reply(`Ha ocurrido un error: ${error} `);
+                }
+              
+            } else {
+              await interaction.reply(
+                ` Hubo un problema al momento de registrarte con el Nickname de ${nickname}, probablemente no estes en el gremio, no esperes para ser parte nuestra comunidad  :beers: `
+              );
+            }
+          } else {
+            await interaction.reply(
+              `No se encontró al jugador ${nickname} en la base de datos de albion online, porfavor ingresa el mismo nombre que tienes en el juego`
+            );
+          }
+        } else {
+          console.log("entro al comando parte 4");
+        }
+      } catch (error) {
+        await interaction.reply(`Ha ocurrido un error: ${error}`);
+      }
+
     }
-    // if (interaction.commandName === "wobo") {
-    //   var nickname = "";
-    //   try {
-    //     pwd = await interaction.options.getString("contentwb");
-    //   } catch (error) {
-    //     await interaction.reply({
-    //       content: `Ha ocurrido un error: ${error}`,
-    //       ephemeral: true,
-    //     });
-    //   }
-
-    //   // console.log("entro al comando");
-    //   try {
-    //     if (pwd === "ismaestopo") {
-    //       await interaction.member.roles.add("1231978864968863875");
-    //       await interaction.reply({
-    //         content: `El usuario es un :deer:`,
-    //         ephemeral: true, // Solo el usuario que ejecutó el comando verá este mensaje
-    //       });
-    //     } else {
-    //       await interaction.reply({
-    //         content: `Es correcto este usuario ${pwd} efectivamente es gay! :man_tipping_hand:`, // Solo el usuario que ejecutó el comando verá este mensaje
-    //       });
-    //     }
-    //   } catch (error) {
-    //     await interaction.reply(`Ha ocurrido un error: ${error}`);
-    //   }
-
-    //   // const resp = await interaction.reply("prueba finalizada!");
-    //   //console.log(resp);
-    // }
+ 
   });
 };
 
