@@ -167,23 +167,23 @@ const cnn = async () => {
     } 
 
     if (interaction.commandName === "join") {
-      console.log("entro al comando");
+      console.log("entro al comando join");
       var nickname = "";
       try {
         nickname = await interaction.options.getString("nickname");
-        console.log("nickname");
+        console.log("nickname join");
       } catch (error) {
         await interaction.reply(`Ha ocurrido un error: ${error} `);
       }
 
-      console.log("Validado el nickname listo para llamar a la api del albion");
+      console.log("Validado el nickname listo para llamar a la api del albion join");
       try {
         const apiAlbionResp = await axios.get(
           `https://gameinfo.albiononline.com/api/gameinfo/search?q=${nickname}`,
           { timeout: 100000 }
         );
         
-        console.log("entro al comando parte 3");
+        console.log("entro al comando parte 3 join");
         if (apiAlbionResp.status === 200) {
           if (apiAlbionResp.data.players.length > 0) {
             // Pertenece a la federacion Y?
@@ -200,7 +200,7 @@ const cnn = async () => {
             );
 
             if (esMiembro) {        
-               
+               console.log(jugador)
                 try {
                   const userId = interaction.user.id;               
                   if (userId) {
@@ -222,7 +222,7 @@ const cnn = async () => {
                        
 
                         await interaction.followUp(
-                          `El usuario ${nickname}, se ha registrado en el servidor, Bienvenido! A partir de ahora tienes el rol de miembro :green_heart: \n Gremio: ${miembro.GuildName} `                          
+                          `El usuario ${nickname}, se ha registrado en el servidor, Bienvenido! A partir de ahora tienes el rol de miembro :green_heart: \n Gremio: ${jugador.GuildName} `                          
                         );
                       
                     
