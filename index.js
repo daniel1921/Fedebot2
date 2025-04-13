@@ -182,11 +182,18 @@ const cnn = async () => {
           `https://gameinfo.albiononline.com/api/gameinfo/search?q=${nickname}`,
           { timeout: 100000 }
         );
+        
         console.log("entro al comando parte 3");
         if (apiAlbionResp.status === 200) {
           if (apiAlbionResp.data.players.length > 0) {
             // Pertenece a la federacion Y?
             const esMiembro = apiAlbionResp.data.players.some(
+              (miembro) =>
+                (miembro.GuildName === "La Federacion Y" || miembro.GuildName === "CHAMBERS OF TRUTH") &&
+                miembro.Name.toLowerCase() === nickname.toLowerCase()
+            );
+
+            const jugador = apiAlbionResp.data.players.find(
               (miembro) =>
                 (miembro.GuildName === "La Federacion Y" || miembro.GuildName === "CHAMBERS OF TRUTH") &&
                 miembro.Name.toLowerCase() === nickname.toLowerCase()
@@ -203,22 +210,19 @@ const cnn = async () => {
                     );
                     try {
                   
-                      console.log('respuesta de la api de la fede: ', createPlayerInApp)
-                      
-
                         await interaction.member.setNickname(nickname.toLowerCase());
                         await interaction.member.roles.add("1360773908663500949");
-                        if(miembro.GuildName === "CHAMBERS OF TRUTH") {
+                        if(jugador.GuildName === "CHAMBERS OF TRUTH") {
                           await interaction.member.roles.add("1361037774257651906");
                         }
 
-                        if(miembro.GuildName === "La Federacion Y") {
+                        if(jugador.GuildName === "La Federacion Y") {
                           await interaction.member.roles.add("1361037610658828609");
                         }
                        
 
                         await interaction.followUp(
-                          `El usuario ${nickname}, se ha registrado en el servidor, Bienvenido! A partir de ahora tienes el rol de miembro :green_heart:  `                          
+                          `El usuario ${nickname}, se ha registrado en el servidor, Bienvenido! A partir de ahora tienes el rol de miembro :green_heart: \n Gremio: ${miembro.GuildName} `                          
                         );
                       
                     
