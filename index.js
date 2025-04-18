@@ -189,13 +189,13 @@ const cnn = async () => {
             // Pertenece a la federacion Y?
             const esMiembro = apiAlbionResp.data.players.some(
               (miembro) =>
-                (miembro.GuildName === "La Federacion Y" || miembro.GuildName === "CHAMBERS OF TRUTH") &&
+                (miembro.GuildName === "La Federacion Y" || miembro.GuildName === "Silent Fame") &&
                 miembro.Name.toLowerCase() === nickname.toLowerCase()
             );
 
             const jugador = apiAlbionResp.data.players.find(
               (miembro) =>
-                (miembro.GuildName === "La Federacion Y" || miembro.GuildName === "CHAMBERS OF TRUTH") &&
+                (miembro.GuildName === "La Federacion Y" || miembro.GuildName === "Silent Fame") &&
                 miembro.Name.toLowerCase() === nickname.toLowerCase()
             );
 
@@ -212,7 +212,7 @@ const cnn = async () => {
                   
                         await interaction.member.setNickname(nickname.toLowerCase());
                         await interaction.member.roles.add("1360773908663500949");
-                        if(jugador.GuildName === "CHAMBERS OF TRUTH") {
+                        if(jugador.GuildName === "Silent Fame") {
                           await interaction.member.roles.add("1361037774257651906");
                         }
 
