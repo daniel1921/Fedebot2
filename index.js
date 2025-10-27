@@ -100,9 +100,8 @@ const cnn = async () => {
                         [
                           {
                             nickname: nickname.toLowerCase(),
-                            idCargo: 3,
-                            idRol: 5,
                             idUserDiscord: userId,
+                            idGremio: 1
                           },
                         ],
                         { timeout: 100000 }
